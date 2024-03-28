@@ -8,5 +8,5 @@
 
 html,
 body {
-	@apply h-screen p-0 m-0 bg-sky-950 bg-opacity-10;
+	@apply h-screen p-0 m-0 bg-sky-950 bg-opacity-10 overflow-hidden;
 }

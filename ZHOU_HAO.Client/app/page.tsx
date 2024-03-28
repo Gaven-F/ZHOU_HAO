@@ -3,11 +3,8 @@
 import HFullCard from "@/components/hFullCard";
 import { Button, ConfigProvider, Descriptions, Flex, Space, Tag } from "antd";
 import dayjs, { Dayjs } from "dayjs";
-import { concat, padStart } from "lodash";
-import { Noto_Sans_SC } from "next/font/google";
-import React, { useEffect, useRef, useState } from "react";
-
-const noto = Noto_Sans_SC({ subsets: ["latin"] });
+import { concat } from "lodash";
+import { useEffect, useRef, useState } from "react";
 
 export default function App() {
 	const logDiv = useRef<HTMLDivElement>(null);
@@ -26,11 +23,9 @@ export default function App() {
 		}, 15);
 	};
 
-	useEffect(() => {}, []);
-
 	return (
 		<HFullCard
-			className="bg-sky-200 bg-opacity-10 rounded-none"
+			className="bg-sky-200 bg-opacity-10 rounded-none h-full pb-[90px]"
 			title={
 				<div className="text-center text-balance text-2xl bg-clip-text text-transparent bg-[linear-gradient(135deg,#5b247a,#1bcedf)]">
 					<div className="mb-2">ZHOU_HAO&apos;S PET FEEDING SYSTEM</div>
@@ -40,7 +35,6 @@ export default function App() {
 			<Space
 				className="w-full"
 				direction="vertical">
-					
 				<HFullCard
 					className="h-auto"
 					title="状态显示">
@@ -75,35 +69,40 @@ export default function App() {
 					</div>
 				</HFullCard>
 
-				<Flex justify="space-between">
-					<Button
-						ghost
-						disabled={open}
-						type="primary"
-						onClick={() => {
-							setOpen(true);
-							setLog((log) =>
-								concat(log, { msg: "阀门打开，发放食物", time: dayjs() }),
-							);
-							scrollDown();
-						}}>
-						开启食物
-					</Button>
-					<Button
-						danger
-						ghost
-						disabled={!open}
-						type="primary"
-						onClick={() => {
-							setOpen(false);
-							setLog((log) =>
-								concat(log, { msg: "阀门关闭，停止发放食物", time: dayjs() }),
-							);
-							scrollDown();
-						}}>
-						关闭食物
-					</Button>
-				</Flex>
+				<HFullCard className="rounded-none fixed bottom-0 left-0 right-0 bg-white bg-opacity-50">
+					<Flex justify="space-between">
+						<Button
+							ghost
+							disabled={open}
+							type="primary"
+							onClick={() => {
+								setOpen(true);
+								setLog((log) =>
+									concat(log, { msg: "阀门打开，发放食物", time: dayjs() }),
+								);
+								scrollDown();
+							}}>
+							开启食物
+						</Button>
+						<Button
+							danger
+							ghost
+							disabled={!open}
+							type="primary"
+							onClick={() => {
+								setOpen(false);
+								setLog((log) =>
+									concat(log, {
+										msg: "阀门关闭，停止发放食物",
+										time: dayjs(),
+									}),
+								);
+								scrollDown();
+							}}>
+							关闭食物
+						</Button>
+					</Flex>
+				</HFullCard>
 			</Space>
 		</HFullCard>
 	);

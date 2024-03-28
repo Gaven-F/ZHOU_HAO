@@ -9,7 +9,7 @@ export default function HFullCard({ styles, className, ...prop }: CardProps) {
 	return (
 		<Card
 			{...prop}
-			className={className + ` h-full w-full flex flex-col`}
+			className={className + ` w-full flex flex-col`}
 			styles={{
 				...styles,
 				body: { ...styles?.body, flex: "1 0 max-content" },

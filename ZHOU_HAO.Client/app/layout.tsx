@@ -18,8 +18,7 @@ export default function RootLayout({
 		<html lang="en">
 			<body className={noto.className}>
 				<ConfigProvider
-					theme={{ token: { fontFamily: "inherit", fontSize: 20 } }}
-					componentSize="large">
+					theme={{ token: { fontFamily: "inherit", fontSize: 20 } }}>
 					{children}
 				</ConfigProvider>
 			</body>

@@ -122,7 +122,7 @@ const LogLine = ({
 				`text-[${textColor}] flex flex-row justify-between`
 			}>
 			<div>{children.msg}</div>
-			<div suppressHydrationWarning>{children.time.format("HH:mm:ss.SSS")}</div>
+			<div suppressHydrationWarning>{children.time.format("HH:mm:ss")}</div>
 		</div>
 	);
 };

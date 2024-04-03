@@ -1,13 +1,13 @@
 "use client";
 
 import HFullCard from "@/components/hFullCard";
+import LogModule from "@/components/logModule";
+import StatusModule from "@/components/statusModule";
+import { DataType } from "@/ts/dataType";
 import { Button, Flex, Space } from "antd";
 import dayjs from "dayjs";
-import { StatusProvider } from "../ts/context/context";
-import { DataType } from "@/ts/dataType";
-import StatusModule from "@/components/statusModule";
-import LogModule from "@/components/logModule";
 import { useImmer } from "use-immer";
+import { StatusProvider } from "../ts/context/context";
 
 export default function App() {
 	const [food, setFood] = useImmer<DataType.FoodStatus>({
@@ -19,10 +19,11 @@ export default function App() {
 		log: [{ msg: "尝试链接服务器", time: dayjs() }],
 	});
 
+	const openFoodBtnDisable = food.foodOpen && !server.connected;
+	const closeFoodBtnDisable = !food.foodOpen || !server.connected;
+
 	return (
-		<StatusProvider
-			foodStatus={food}
-			serverStatus={server}>
+		<StatusProvider foodStatus={food} serverStatus={server}>
 			<HFullCard
 				className="bg-sky-200 bg-opacity-10 rounded-none h-full pb-[90px]"
 				title={
@@ -30,10 +31,9 @@ export default function App() {
 						<div className="mb-2">ZHOU_HAO&apos;S PET FEEDING SYSTEM</div>
 						<div>周浩的宠物喂食系统</div>
 					</div>
-				}>
-				<Space
-					className="w-full"
-					direction="vertical">
+				}
+			>
+				<Space className="w-full" direction="vertical">
 					<StatusModule />
 					<LogModule />
 
@@ -41,7 +41,7 @@ export default function App() {
 						<Flex justify="space-between">
 							<Button
 								ghost
-								disabled={food.foodOpen}
+								disabled={openFoodBtnDisable}
 								type="primary"
 								onClick={() => {
 									setFood((data) => {
@@ -50,23 +50,24 @@ export default function App() {
 									setServer((data) => {
 										data.log.push({ msg: "开始发放", time: dayjs() });
 									});
-								}}>
+								}}
+							>
 								开启食物
 							</Button>
 							<Button
 								danger
 								ghost
-								disabled={!food.foodOpen}
+								disabled={closeFoodBtnDisable}
 								type="primary"
 								onClick={() => {
 									setFood((data) => {
 										data.foodOpen = false;
 									});
-
-									setServer((v) => {
-										v.log.push({ msg: "结束发放", time: dayjs() });
+									setServer((data) => {
+										data.log.push({ msg: "结束发放", time: dayjs() });
 									});
-								}}>
+								}}
+							>
 								关闭食物
 							</Button>
 						</Flex>

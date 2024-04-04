@@ -4,11 +4,18 @@ import HFullCard from "@/components/hFullCard";
 import LogModule from "@/components/logModule";
 import StatusModule from "@/components/statusModule";
 import { DataType } from "@/ts/dataType";
+import {
+	ACTION_TYPE,
+	DataReducer,
+	DataReducerInitData,
+} from "@/ts/reducer/dataReducer";
 import { Button, Flex, Space } from "antd";
 import dayjs from "dayjs";
-import { useImmer } from "use-immer";
+import { useCallback, useEffect } from "react";
+import { useImmer, useImmerReducer } from "use-immer";
 import { StatusProvider } from "../ts/context/context";
 
+let cnt = 0;
 export default function App() {
 	const [food, setFood] = useImmer<DataType.FoodStatus>({
 		foodOpen: false,
@@ -19,11 +26,26 @@ export default function App() {
 		log: [{ msg: "尝试链接服务器", time: dayjs() }],
 	});
 
-	const openFoodBtnDisable = food.foodOpen && !server.connected;
-	const closeFoodBtnDisable = !food.foodOpen || !server.connected;
+	const [data, dispash] = useImmerReducer(DataReducer, DataReducerInitData);
+
+	const openFoodBtnDisable = data.foodOpen && !data.connected;
+	const closeFoodBtnDisable = !data.foodOpen || !data.connected;
+
+	const addLog = useCallback(
+		(msg: string) => {
+			dispash({ type: ACTION_TYPE.ADD_LOG, payload: [{ msg, time: dayjs() }] });
+		},
+		[dispash],
+	);
+
+	// strictMode下，useEffect会执行两次
+	// 在页面加载时，添加尝试连接服务器
+	useEffect(() => {
+		addLog("尝试连接服务器");
+	}, [addLog]);
 
 	return (
-		<StatusProvider foodStatus={food} serverStatus={server}>
+		<StatusProvider foodStatus={data} serverStatus={data}>
 			<HFullCard
 				className="bg-sky-200 bg-opacity-10 rounded-none h-full pb-[90px]"
 				title={
@@ -50,6 +72,7 @@ export default function App() {
 									setServer((data) => {
 										data.log.push({ msg: "开始发放", time: dayjs() });
 									});
+									addLog("开始发放");
 								}}
 							>
 								开启食物
@@ -66,6 +89,7 @@ export default function App() {
 									setServer((data) => {
 										data.log.push({ msg: "结束发放", time: dayjs() });
 									});
+									addLog("结束发放");
 								}}
 							>
 								关闭食物
